@@ -1,0 +1,7 @@
+{
+  "name": "<%= name %>",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./<%= name %>.js",
+  "types": "./<%= name %>.d.ts"
+}
