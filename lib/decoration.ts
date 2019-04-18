@@ -22,7 +22,6 @@ export const cliOf = (generatorName: string, module: NodeModule, __dirname: stri
 
   const addQuestion = (inquirerQuestion: Question) => {
     config.tasks.push(async () => {
-      console.log('addQuestion')
       const answ = await prompt([inquirerQuestion]);
       Object.assign(config.answers, answ);
     });
