@@ -1,1 +1,1 @@
-type Answers = { [key: string]: string };
+export type Answers = { [key: string]: string };

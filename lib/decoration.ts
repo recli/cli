@@ -1,13 +1,9 @@
 import { Question, prompt } from "inquirer";
 import path from "path";
-import { Hooks } from "./models/Hook";
+import { Answers, Hooks } from "./models";
 import { template } from "./template";
 import { updateFile as fileUpdate } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
-
-interface Answers {
-  [key: string]: string
-}
 
 export {
   useImport,
