@@ -5,6 +5,10 @@ import { template } from "./template";
 import { updateFile as fileUpdate } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 
+interface Answers {
+  [key: string]: string
+}
+
 export {
   useImport,
   usePath,
@@ -13,7 +17,8 @@ export {
   prompt
 }
 
-export const cliOf = (generatorName: string, module: NodeModule, __dirname: string) => {
+export const cliOf = (generatorName: string) => {
+  const currentGenPath = path.join(__dirname, '/generators', generatorName);
   const config = {
     name: generatorName,
     tasks: [] as Array<() => any>,
@@ -38,8 +43,8 @@ export const cliOf = (generatorName: string, module: NodeModule, __dirname: stri
       async () => {
         return await Promise.all(
           templatesPaths.map(p => {
-            const from = path.join(__dirname, p);
-            const to = path.join(__dirname, destination, p);
+            const from = path.join(currentGenPath, p);
+            const to = path.join(currentGenPath, destination, p);
             return template({
               from,
               to,
@@ -56,7 +61,7 @@ export const cliOf = (generatorName: string, module: NodeModule, __dirname: stri
   const updateFile = (filePath: string, getHooks: (answers: Answers) => Hooks) => {
     config.tasks.push(() => {
       const hooks = getHooks(Object.assign({}, config.answers));
-      const p = path.join(__dirname, filePath);
+      const p = path.join(currentGenPath, filePath);
 
       return fileUpdate(p, hooks);
     });
@@ -70,7 +75,7 @@ export const cliOf = (generatorName: string, module: NodeModule, __dirname: stri
     updateFile,
   }
 
-  module.exports = run;
+  module.parent.exports = run;
 
   return api;
 };

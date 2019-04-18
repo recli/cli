@@ -25,6 +25,9 @@
   "author": "eguurt@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.123",
+    "@types/pluralize": "^0.0.29",
     "colors": "^1.1.2",
     "ejs": "^2.6.1",
     "pluralize": "^4.0.0"

@@ -1,5 +1,6 @@
 import { generatorsDir } from "../helpers";
 import path from "path";
+import colors from "colors";
 import { prompt } from "inquirer";
 
 const creationQuestions = [
@@ -15,6 +16,7 @@ const creationQuestions = [
 
 const init = async () => {
   const answ = (await prompt(creationQuestions)) as { generator: string };
+
   const fn = require(path.join(
     __dirname,
     "./generators",
@@ -22,16 +24,25 @@ const init = async () => {
     "index"
   ));
 
+  // console.log('------------',path.join(
+  //   __dirname,
+  //   "./generators",
+  //   answ.generator,
+  //   "index"
+  // ))
+
   const config = fn();
   let current = 0;
 
   const move = async () => {
     if (config.tasks.length > current) {
+      /* Step */
       await config.tasks[current]();
       current += 1;
+      /* Next */
       await move();
     } else {
-      console.log("done");
+      console.log(`\n${colors.green('  = Have a nice day! =  ')}\n`);
       return null;
     }
   };
@@ -42,6 +53,5 @@ const init = async () => {
     console.log(err);
   }
 };
-
 
 init();

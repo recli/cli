@@ -1,6 +1,6 @@
 import { cliOf, useImport, usePath } from "../../decoration";
 
-cliOf('generator-name', module, __dirname)
+cliOf('decorator')
   .addQuestion({
     name: 'file',
     message: 'Move file',

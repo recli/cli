@@ -5,7 +5,8 @@ import _ from 'lodash';
 import pluralize from 'pluralize';
 
 export const appRoot = (...somePath) => path.join(process.env.PWD, ...somePath);
-export const generatorsDir = dirPath =>
+/* + */
+export const generatorsDir = (dirPath:string) =>
   fs
     .readdirSync(dirPath)
     .filter(e => fs.statSync(path.join(dirPath, e)).isDirectory());
@@ -15,7 +16,7 @@ export const files = globTpl => glob.sync(globTpl, { nodir: true });
 export const filesExpose = globTpl =>
   files(globTpl).map(filename => ({
     filename,
-    content: fs.readFileSync(filename, { ecoding: 'utf8' }),
+    content: fs.readFileSync(filename, { encoding: 'utf8' }),
   }));
 
 export const dirs = globTpl => {
@@ -24,7 +25,7 @@ export const dirs = globTpl => {
   return glob.sync(globTpl).filter(filePath => !onlyFiles.includes(filePath));
 };
 
-const getDirectories = (srcpath, ignoredFolders, prevPath) => {
+const getDirectories = (srcpath, ignoredFolders, prevPath?) => {
   const folders = fs
     .readdirSync(srcpath)
     .filter(
