@@ -1,14 +1,14 @@
-import { generatorsDir } from "../helpers";
-import path from "path";
-import colors from "colors";
-import { prompt } from "inquirer";
+import { generatorsDir } from './helpers';
+import path from 'path';
+import colors from 'colors';
+import { prompt } from 'inquirer';
 
 const creationQuestions = [
   {
-    type: "list",
-    name: "generator",
-    message: "Please select generator:",
-    choices: generatorsDir(path.join(__dirname, "./generators")).map(file =>
+    type: 'list',
+    name: 'generator',
+    message: 'Please select generator:',
+    choices: generatorsDir(path.join(__dirname, './generators')).map(file =>
       path.basename(file)
     )
   }
@@ -19,17 +19,10 @@ const init = async () => {
 
   const fn = require(path.join(
     __dirname,
-    "./generators",
+    './generators',
     answ.generator,
-    "index"
+    'index'
   ));
-
-  // console.log('------------',path.join(
-  //   __dirname,
-  //   "./generators",
-  //   answ.generator,
-  //   "index"
-  // ))
 
   const config = fn();
   let current = 0;
