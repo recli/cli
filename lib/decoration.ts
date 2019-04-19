@@ -13,6 +13,7 @@ export {
   prompt
 }
 
+// @main function
 export const cliOf = (generatorName: string) => {
   const currentGenPath = path.join(__dirname, '/generators', generatorName);
   const config = {
@@ -21,6 +22,7 @@ export const cliOf = (generatorName: string) => {
     answers: {} as Answers
   };
 
+  // @adding question
   const addQuestion = (inquirerQuestion: Question) => {
     config.tasks.push(async () => {
       const answ = await prompt([inquirerQuestion]);
@@ -30,10 +32,9 @@ export const cliOf = (generatorName: string) => {
     return api;
   };
 
-  const run = () => {
-    return config;
-  };
+  const run = () => config;
 
+  // @moving templates
   const moveTemplates = (destination: string, templatesPaths: string[]) => {
     config.tasks.push(
       async () => {
@@ -47,13 +48,14 @@ export const cliOf = (generatorName: string) => {
               data: config.answers
             });
           })
-        )
-      }
-    );
+          )
+        }
+        );
 
-    return api;
-  };
+        return api;
+      };
 
+  // @updates file
   const updateFile = (filePath: string, getHooks: (answers: Answers) => Hooks) => {
     config.tasks.push(() => {
       const hooks = getHooks(Object.assign({}, config.answers));

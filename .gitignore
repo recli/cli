@@ -85,3 +85,6 @@ typings/
 
 # fake destination folder
 lib/fake/destination/**
+
+# system files
+.DS_Store

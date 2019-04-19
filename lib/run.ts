@@ -1,14 +1,18 @@
-import { generatorsDir } from './helpers';
+import { getDirList } from './helpers';
 import path from 'path';
 import colors from 'colors';
 import { prompt } from 'inquirer';
+const env = 'user';
+// get env from console for making of second menu iteration
+const userGeneratorsDir = path.join(__dirname, './generators');
+const localGeneratorsDir = path.join(__dirname, './local-generators');
 
 const creationQuestions = [
   {
     type: 'list',
     name: 'generator',
     message: 'Please select generator:',
-    choices: generatorsDir(path.join(__dirname, './generators')).map(file =>
+    choices: getDirList(userGeneratorsDir).map(file =>
       path.basename(file)
     )
   }

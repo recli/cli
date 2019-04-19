@@ -5,8 +5,7 @@ import fs from 'fs';
 // import pluralize from 'pluralize';
 
 // export const appRoot = (...somePath) => path.join(process.env.PWD, ...somePath);
-/* + */
-export const generatorsDir = (dirPath:string) =>
+export const getDirList = (dirPath:string) =>
   fs
     .readdirSync(dirPath)
     .filter(e => fs.statSync(path.join(dirPath, e)).isDirectory());
