@@ -1,6 +1,6 @@
 import { getDirList } from './helpers';
-import path from 'path';
-import colors from 'colors';
+import * as path from 'path';
+import * as colors from 'colors';
 import { prompt } from 'inquirer';
 import {
   localEnvCliParam,

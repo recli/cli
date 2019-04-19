@@ -1,6 +1,6 @@
 import { Question, prompt } from "inquirer";
-import path from "path";
-import fs from "fs";
+import * as path from "path";
+import * as fs from "fs";
 import { Answers, Hooks } from "./models";
 import { template } from "./template";
 import { updateFile as fileUpdate } from "./file";

@@ -57,3 +57,5 @@
 //     return err.message;
 //   }
 // };
+
+export const emptyFunction = () => {};

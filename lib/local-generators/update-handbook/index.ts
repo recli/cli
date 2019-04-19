@@ -1,5 +1,3 @@
-import path from 'path';
-import fs from 'fs';
 import { cliOf } from "../../decoration";
 
 cliOf('update-handbook')
