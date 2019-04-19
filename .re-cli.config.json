@@ -1,3 +1,5 @@
 {
-
+  "localEnvCliParam": "local",
+  "userGeneratorsDir": "generators",
+  "localGeneratorsDir": "local-generators"
 }

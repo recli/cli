@@ -9,7 +9,8 @@
   "scripts": {
     "crap": "node ./crap.js",
     "test": "jest",
-    "run": "babel-node index2.js"
+    "run": "babel-node index2.js",
+    "run-local": "babel-node index2.js --local"
   },
   "preferGlobal": true,
   "keywords": [

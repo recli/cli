@@ -2,17 +2,26 @@ import { getDirList } from './helpers';
 import path from 'path';
 import colors from 'colors';
 import { prompt } from 'inquirer';
-const env = 'user';
+import {
+  localEnvCliParam,
+  userGeneratorsDir,
+  localGeneratorsDir,
+} from '../.re-cli.config.json';
+
+
+const env = process.argv[2] === `--${localEnvCliParam}` ? 'local' : 'user';
+
 // get env from console for making of second menu iteration
-const userGeneratorsDir = path.join(__dirname, './generators');
-const localGeneratorsDir = path.join(__dirname, './local-generators');
+const generatorsFolderName = env === 'user' ? userGeneratorsDir : localGeneratorsDir;
+
+const generatorsFolder = path.join(__dirname, `./${generatorsFolderName}`);
 
 const creationQuestions = [
   {
     type: 'list',
     name: 'generator',
     message: 'Please select generator:',
-    choices: getDirList(userGeneratorsDir).map(file =>
+    choices: getDirList(generatorsFolder).map(file =>
       path.basename(file)
     )
   }
@@ -23,7 +32,7 @@ const init = async () => {
 
   const fn = require(path.join(
     __dirname,
-    './generators',
+    `./${generatorsFolderName}`,
     answ.generator,
     'index'
   ));
