@@ -1,6 +1,6 @@
 import { getDirList } from './helpers';
 import * as path from 'path';
-import * as colors from 'colors';
+import { green } from 'colors';
 import { prompt } from 'inquirer';
 import {
   localEnvCliParam,
@@ -48,7 +48,7 @@ const init = async () => {
       /* Next */
       await move();
     } else {
-      console.log(`\n${colors.green('  = Have a nice day! =  ')}\n`);
+      console.log(`\n${green('  = Have a nice day! =  ')}\n`);
       return null;
     }
   };
