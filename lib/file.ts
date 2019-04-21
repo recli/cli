@@ -56,8 +56,6 @@ export const getAvailableGenerators = () => {
         formatError(err);
         res([]);
       } else {
-        console.log(matches);
-
         const generators = matches
           .filter(e => !fs.statSync(e).isDirectory())
           .map(e => {

@@ -7,7 +7,6 @@ import { formatError } from "./error";
 
 const init = async () => {
   try {
-    console.log(process.cwd(), path.join(process.cwd(), '.re-cli/config.js'));
     require(require.resolve(path.join(process.cwd(), '.re-cli/config.js')));
   } catch(e) {
     formatError(e);
