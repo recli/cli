@@ -1,6 +1,6 @@
-import { cliOf, useImport, usePath } from "../../decoration";
+import { cliOf, useImport, usePath } from "../../dist/index";
 
-cliOf('decorator')
+cliOf('decorator', module)
   .addQuestion({
     name: 'file',
     message: 'Move file',

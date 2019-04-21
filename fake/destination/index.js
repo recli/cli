@@ -2,11 +2,11 @@ import { template } from '../template';
 import asdasd from './asdasd';
 import asdasd from './asdasd';
 import asd from './asd';
-import  from './';
 import asdasd from './asdasd';
-import  from './';
-import  from './';
 import vttvtv from './vttvtv';
+import  from './';
+import  from './';
+import  from './';
 /* re-cli:use-import */
 
 const router = [
@@ -18,7 +18,10 @@ const router = [
   './asdasd',
   './',
   './',
-  './vttvtv'
+  './vttvtv',
+  './',
+  './',
+  './'
   /* re-cli:use-path */
 ]
 export {

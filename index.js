@@ -1,5 +1,4 @@
-require('babel-register')({
-  ignore: false,
-  only: [/generators/, /helpers/],
-});
-module.exports = require('./generators');
+require('@babel/register')({
+  extensions: ['.js', '.jsx', '.ts', '.tsx']
+})
+require('./lib/cli.ts')

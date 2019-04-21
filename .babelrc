@@ -3,5 +3,11 @@
     [
       "@babel/preset-env", {"targets": {"node": "current"}}],
       "@babel/preset-typescript"
-    ]
+    ],
+  "ignore": [
+    "node_modules",
+    "lib/fake",
+    "lib/generators/**/*.template.js",
+    "lib/local-generators/create-handbook/handbook.js",
+  ],
 }

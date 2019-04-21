@@ -1,15 +1,22 @@
 {
-  "name": "solid-cli",
+  "name": "re-cli",
   "version": "1.0.14",
   "bin": {
-    "solid-cli": "./index.js"
+    "re-cli": "dist/cli.js"
   },
   "description": "Tool to create tasks in node js",
-  "main": "index.js",
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
   "scripts": {
     "crap": "node ./crap.js",
     "test": "jest",
-    "run": "babel-node index2.js",
+    "test-module": "node ./dist/cli.js",
+    "run": "babel-node index.js",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel ./lib --out-dir ./dist --extensions '.ts,.js' --source-maps inline",
     "run-local": "babel-node index2.js --local"
   },
   "preferGlobal": true,
@@ -20,9 +27,6 @@
     "generator",
     "task"
   ],
-  "files": [
-    "generators"
-  ],
   "author": "eguurt@gmail.com",
   "license": "ISC",
   "dependencies": {
@@ -31,7 +35,9 @@
     "@types/pluralize": "^0.0.29",
     "colors": "^1.1.2",
     "ejs": "^2.6.1",
-    "pluralize": "^4.0.0"
+    "glob": "^7.1.3",
+    "pluralize": "^4.0.0",
+    "pretty-error": "^2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
@@ -43,13 +49,16 @@
     "@types/inquirer": "^6.0.0",
     "@types/jest": "^24.0.11",
     "babel-jest": "^24.7.1",
+    "cross-env": "^5.2.0",
     "inquirer": "^6.3.1",
-    "jest": "^24.7.1"
+    "jest": "^24.7.1",
+    "typescript": "^3.4.4"
   },
   "jest": {
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/generators/"
+      "/generators/",
+      "/fake/"
     ]
   }
 }
