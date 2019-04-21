@@ -4,8 +4,9 @@ import glob from "glob";
 import { yellow } from "colors";
 
 import { applyHooksToContent } from "./hooks";
+import { log } from "./helpers";
 import { Hooks } from "./models/Hook";
-import inquirer from "inquirer";
+import inquirer, { Answers } from "inquirer";
 import { GENERATORS_PATH } from "./config";
 import { formatError } from "./error";
 
@@ -26,23 +27,26 @@ export const writeData = async (filename: string, data: string) => {
 
   try {
     await fs.promises.writeFile(filename, data, { flag: "wx" });
+    await log([`created new file: ${yellow(filename)}`])
   } catch (err) {
     if (err.code == "EEXIST") {
       console.log("File: " + yellow(filename) + " already exists.");
-      const answers = (await inquirer.prompt([
+      await inquirer.prompt([
         {
           type: "confirm",
           name: "isOverwrite",
           default: true,
           message: "Overwrite?"
         }
-      ])) as { isOverwrite: boolean };
+      ]).then(async (answers: Answers) => {
+        if (!answers.isOverwrite) {
+          return undefined;
+        } else {
+          await log([`overwrited file: ${yellow(filename)}`])
+          return fs.promises.writeFile(filename, data);
+        }
+      }) ;
 
-      if (!answers.isOverwrite) {
-        return undefined;
-      } else {
-        return fs.promises.writeFile(filename, data);
-      }
     } else {
       return err;
     }

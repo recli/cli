@@ -7,18 +7,72 @@ import vttvtv from './vttvtv';
 import  from './';
 import  from './';
 import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
+import  from './';
 /* re-cli:use-import */
 
 const router = [
-  './xxx.jsp',
-  './asdasd',
-  './asdasd',
-  './asd',
+  './xxx.jsp',,
   './',
-  './asdasd',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './wcw',
   './',
   './',
   './vttvtv',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
+  './',
   './',
   './',
   './'

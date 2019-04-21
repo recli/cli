@@ -1,4 +1,5 @@
 import PrettyError from "pretty-error";
+import { log } from "./helpers";
 const pe = new PrettyError();
 // @ts-ignore
 pe.filter((traceLine: Object | any, lineNumber: number) => {
@@ -11,5 +12,5 @@ pe.filter((traceLine: Object | any, lineNumber: number) => {
 
 export const formatError = (err: Error) => {
   const renderedError = pe.render(err);
-  console.log(renderedError);
+  log([renderedError]);
 }

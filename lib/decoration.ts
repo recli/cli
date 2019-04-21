@@ -5,7 +5,8 @@ import { template } from "./template";
 import { updateFile as fileUpdate } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
-
+import { log } from "./helpers";
+import { green } from "colors";
 export { useImport, usePath, useCustom, useModuleName, prompt };
 
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
@@ -14,12 +15,14 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const config = {
     name: generatorName,
     tasks: [] as Array<() => any>,
-    answers: {} as Answers
+    answers: {} as Answers,
   };
 
   const addQuestion = (inquirerQuestion: Question) => {
     config.tasks.push(async () => {
       const answ = await prompt([inquirerQuestion]);
+      // @ts-ignore
+      log([`answer is: ${green(answ[inquirerQuestion.name] || inquirerQuestion.type === 'confirm' ? answ[inquirerQuestion.name] : 'empty string')}`])
       Object.assign(config.answers, answ);
     });
 
