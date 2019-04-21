@@ -2,7 +2,7 @@ import { Question, prompt } from "inquirer";
 import path from "path";
 import { Answers, Hooks } from "./models";
 import { template } from "./template";
-import { updateFile as fileUpdate } from "./file";
+import { updateFile as fileUpdate, rename as anRename } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
 import { log } from "./helpers";
@@ -72,10 +72,45 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     return api;
   };
 
+  const rename = (
+    anPath: string,
+    newName: (answers: Answers) => string
+  ) => {
+    config.tasks.push(async () => {
+      try {
+        const name = newName(Object.assign({}, config.answers));
+
+        return anRename(anPath, name);
+      } catch (err) {
+        return formatError(err);
+      }
+    });
+
+    return api;
+  };
+
+  const changeAnswers = (
+    change: (answers: Answers) => Answers
+  ) => {
+    config.tasks.push(async () => {
+      try {
+        config.answers = change(Object.assign({}, config.answers));
+        log([
+          `Answers changed to:`,
+          `${green(JSON.stringify(config.answers, null, 4))}`
+        ])
+      } catch (err) {}
+    });
+
+    return api;
+  };
+
   const api = {
     addQuestion,
     moveTemplates,
-    updateFile
+    updateFile,
+    rename,
+    changeAnswers
   };
 
   module.exports = {

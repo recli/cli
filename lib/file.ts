@@ -12,10 +12,24 @@ import { formatError } from "./error";
 
 export const updateFile = async (filePath: string, hooks: Hooks) => {
   try {
-    let content = fs.readFileSync(filePath, "utf-8");
+    let content = await fs.promises.readFile(filePath, "utf-8");
     content = applyHooksToContent(content, hooks);
 
     return writeData(filePath, content);
+  } catch (err) {
+    formatError(err);
+  }
+};
+
+export const rename = async (anPath: string, newName: string) => {
+  try {
+    const dirName = path.dirname(anPath);
+    const newPath = path.join(dirName, newName);
+    log([
+      `renamed from: ${yellow(anPath)}`,
+      `          to: ${yellow(newPath)}`,
+    ])
+    return fs.promises.rename(anPath, newPath);
   } catch (err) {
     formatError(err);
   }
@@ -27,7 +41,7 @@ export const writeData = async (filename: string, data: string) => {
 
   try {
     await fs.promises.writeFile(filename, data, { flag: "wx" });
-    await log([`created new file: ${yellow(filename)}`])
+    log([`created new file: ${yellow(filename)}`])
   } catch (err) {
     if (err.code == "EEXIST") {
       console.log("File: " + yellow(filename) + " already exists.");
@@ -42,7 +56,7 @@ export const writeData = async (filename: string, data: string) => {
         if (!answers.isOverwrite) {
           return undefined;
         } else {
-          await log([`overwrited file: ${yellow(filename)}`])
+          log([`overwrited file: ${yellow(filename)}`])
           return fs.promises.writeFile(filename, data);
         }
       }) ;
