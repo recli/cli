@@ -7,8 +7,8 @@ import { template } from "./template";
 import { updateFile as fileUpdate, rename as anRename } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
-import { log } from "./helpers";
-import { green, yellow } from "colors";
+import { log, copyTemplateFolderRecursively } from "./helpers";
+import { green } from "colors";
 
 export { useImport, usePath, useCustom, useModuleName, prompt };
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
@@ -42,20 +42,17 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
           let pathTo: string;
 
           if (typeof p === 'string') {
-            const templateFolderPath = path.join(__currentDirName, p);
-            const destinationFolderPath = path.join(__currentDirName, destination);
-            const isDirectory = fs.lstatSync(templateFolderPath).isDirectory();
-            if (isDirectory) {
-              log([
-                `recursively copying folder from: ${templateFolderPath.yellow}`,
-                `                             to: ${destinationFolderPath.yellow}`,
-              ]);
-              // recursive copying function
-              return null;
-            }
           }
 
           if (typeof p === 'string') {
+            const templateFolderPath = path.join(__currentDirName, p);
+            const destinationFolderPath = path.join(__currentDirName, destination);
+            const isDirectory = fs.lstatSync(templateFolderPath).isDirectory();
+
+            if (isDirectory) {
+              return await copyTemplateFolderRecursively(templateFolderPath, destinationFolderPath);
+            }
+
             pathFrom = p;
             pathTo= p;
           } else {
