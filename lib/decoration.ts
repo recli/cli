@@ -1,14 +1,16 @@
 import { Question, prompt } from "inquirer";
 import path from "path";
+import fs from "fs";
+import { ncp } from "ncp";
 import { Answers, Hooks } from "./models";
 import { template } from "./template";
 import { updateFile as fileUpdate, rename as anRename } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
 import { log } from "./helpers";
-import { green } from "colors";
-export { useImport, usePath, useCustom, useModuleName, prompt };
+import { green, yellow } from "colors";
 
+export { useImport, usePath, useCustom, useModuleName, prompt };
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const __currentDirName = module.paths[0].replace("node_modules", "");
 
@@ -30,23 +32,50 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   };
 
   const run = () => config;
+  type TemplatesPaths = Array<string | {from: string, to: string}> | {(answers: Answers): []};
 
-  const moveTemplates = (destination: string, templatesPaths: string[]) => {
+  const moveTemplates = (destination: string, templatesPaths: TemplatesPaths ) => {
     config.tasks.push(async () => {
       return await Promise.all(
-        templatesPaths.map(async p => {
-          const from = path.join(__currentDirName, p);
-          const to = path.join(__currentDirName, destination, p);
-          try {
-            return template({
-              from,
-              to,
-              data: config.answers
-            });
+        (Array.isArray(templatesPaths) ? templatesPaths  : templatesPaths(Object.assign({}, config.answers))).map(async p => {
+          let pathFrom: string;
+          let pathTo: string;
+
+          if (typeof p === 'string') {
+            const templateFolderPath = path.join(__currentDirName, p);
+            const destinationFolderPath = path.join(__currentDirName, destination);
+            const isDirectory = fs.lstatSync(templateFolderPath).isDirectory();
+            if (isDirectory) {
+              log([
+                `recursively copying folder from: ${templateFolderPath.yellow}`,
+                `                             to: ${destinationFolderPath.yellow}`,
+              ]);
+              // recursive copying function
+              return null;
+            }
           }
-          catch (err) {
-            return formatError(err);
-          }
+
+          if (typeof p === 'string') {
+            pathFrom = p;
+            pathTo= p;
+          } else {
+            pathFrom = p.from;
+            pathTo = p.to;
+          };
+
+            const from = path.join(__currentDirName, pathFrom);
+            const to = path.join(__currentDirName, destination, pathTo);
+            try {
+              return template({
+                from,
+                to,
+                data: config.answers
+              });
+            }
+            catch (err) {
+              return formatError(err);
+            }
+          // }
         })
       );
     });

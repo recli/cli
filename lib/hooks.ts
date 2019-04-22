@@ -15,16 +15,16 @@ export const applyHooksToContent = (content: string, hooks: Hooks) => {
 export const usePath = (path: string) => {
   return {
     regex: /(\s*)(\/\*.*re-cli:use-path.*\*\/)/,
-    content: `,$1'${path}'$1$2`,
+    content: `$1'${path}',$1$2`,
   }
 };
 
 // /* re-cli:import */ will set import moduleName from 'path';
 // @will set import moduleName from 'path';
-export const useImport = (path: string, moduleName: string) => {
+export const useImport = (moduleAs: string, moduleName: string) => {
   return {
     regex: /([\t ]*)(\/\*.*re-cli:use-import.*\*\/)/,
-    content: `$1import ${moduleName} from '${path}';\n$1$2`,
+    content: `$1import ${moduleAs} from '${moduleName}';\n$1$2`,
   }
 };
 
@@ -33,7 +33,7 @@ export const useImport = (path: string, moduleName: string) => {
 export const useModuleName = (moduleName: string) => {
   return {
     regex: /(\s*)(\/\*.*re-cli:use-module-name.*\*\/)/,
-    content: `,$1${moduleName}$1$2`,
+    content: `$1${moduleName},$1$2`,
   }
 };
 
