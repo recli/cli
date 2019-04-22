@@ -12,12 +12,13 @@
   "scripts": {
     "crap": "node ./crap.js",
     "test": "jest",
+    "link": "npm run build && npm link",
     "test-module": "node ./dist/cli.js",
     "run": "babel-node index.js",
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel ./lib --out-dir ./dist --extensions '.ts,.js' --source-maps inline",
-    "run-local": "babel-node index2.js --local"
+    "run-local": "babel-node index.js --local"
   },
   "preferGlobal": true,
   "keywords": [

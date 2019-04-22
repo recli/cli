@@ -27,8 +27,8 @@ export const rename = async (anPath: string, newName: string) => {
     const newPath = path.join(dirName, newName);
     log([
       `renamed from: ${yellow(anPath)}`,
-      `          to: ${yellow(newPath)}`,
-    ])
+      `          to: ${yellow(newPath)}`
+    ]);
     return fs.promises.rename(anPath, newPath);
   } catch (err) {
     formatError(err);
@@ -41,51 +41,59 @@ export const writeData = async (filename: string, data: string) => {
 
   try {
     await fs.promises.writeFile(filename, data, { flag: "wx" });
-    log([`created new file: ${yellow(filename)}`])
+    log([`created new file: ${yellow(filename)}`]);
   } catch (err) {
     if (err.code == "EEXIST") {
       console.log("File: " + yellow(filename) + " already exists.");
-      await inquirer.prompt([
-        {
-          type: "confirm",
-          name: "isOverwrite",
-          default: true,
-          message: "Overwrite?"
-        }
-      ]).then(async (answers: Answers) => {
-        if (!answers.isOverwrite) {
-          return undefined;
-        } else {
-          log([`overwrited file: ${yellow(filename)}`])
-          return fs.promises.writeFile(filename, data);
-        }
-      }) ;
-
+      await inquirer
+        .prompt([
+          {
+            type: "confirm",
+            name: "isOverwrite",
+            default: true,
+            message: "Overwrite?"
+          }
+        ])
+        .then(async (answers: Answers) => {
+          if (!answers.isOverwrite) {
+            return undefined;
+          } else {
+            log([`overwrited file: ${yellow(filename)}`]);
+            return fs.promises.writeFile(filename, data);
+          }
+        });
     } else {
       return err;
     }
   }
 };
 
-export const getAvailableGenerators = () => {
-  return new Promise(res =>
-    glob(GENERATORS_PATH, (err, matches) => {
-      if (err) {
-        formatError(err);
-        res([]);
-      } else {
-        const generators = matches
-          .filter(e => !fs.statSync(e).isDirectory())
-          .map(e => {
-            const p = path.resolve(process.cwd(), e);
-            const m = require(p);
-            return {
-              name: m.name,
-              value: p
-            };
-          });
-        res(generators);
-      }
-    })
-  );
+export const getAvailableGenerators = async () => {
+  const e:any = await Promise.all(GENERATORS_PATH.map(genPath => {
+    return new Promise(res => {
+      glob(genPath, (err, matches) => {
+        if (err) {
+          formatError(err);
+          res([]);
+        }
+        else {
+          const generators = matches.filter(e => !fs.statSync(e).isDirectory())
+            .map(e => {
+              const p = path.resolve(process.cwd(), e);
+              const m = require(p);
+              return {
+                name: m.name,
+                value: p
+              };
+            });
+          res(generators);
+        }
+      });
+    });
+  }));
+
+  return [].concat(...e) as {
+    name: string,
+    value: string
+  }[];
 };
