@@ -1,5 +1,5 @@
 {
-  "name": "re-cli",
+  "name": "@re/cli",
   "version": "1.0.14",
   "bin": {
     "re-cli": "dist/cli.js"
@@ -24,6 +24,9 @@
   "keywords": [
     "yeoman-generator",
     "cli",
+    "recli",
+    "re-cli",
+    "@re/cli",
     "automation",
     "generator",
     "task"
@@ -63,5 +66,16 @@
       "/generators/",
       "/fake/"
     ]
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinskJson/re-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MinskJson/re-cli/issues"
+  },
+  "homepage": "https://github.com/MinskJson/re-cli#readme"
 }

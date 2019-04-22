@@ -1,56 +1,199 @@
 # ⌘ Re-Cli generator
 
-Основаня мотивация убрать рутину вокруг создания файлов. А так же повысить качество кода. За счет создания дополнительных файлов, которые все леняться писать.
+The core motivation is to reduce file creation rutine form dev process for one side. From other is to increase the code quality by automate new code injection. It allow you have strict code agreements cross over ther project, and decrease the onboarding prorcess.
 
-## Установка
+## API
 
-Прежде всего установите yeoman
-
-```js
-npm install -g yo
-```
-Этот проект целиком должен быть установлен в папку `./cli` в вашем проекте. Пока мы не написали `ConfigLess` сборку.
-Затем зайдите в папку cli (`cd ./cli`). И сделайте установку зависимостей этого приложения.
+Full api for generators are here:
 
 ```js
-npm install
+const { cliOf, useImport, usePath, useCustom } = require("@re/cli");
+
+cliOf('Create reducer', module)
+  .addQuestion({
+    name: 'reducerName',
+    message: 'Reducer name',
+    type: 'input'
+  })
+  .addQuestion({
+    name: 'model',
+    message: 'Reducer data model',
+    type: 'input'
+  })
+  .changeAnswers((answers) => {
+    return {
+      reducerName: answers.reducerName,
+      model: answers.model,
+      upperCaseReducerName: answers.reducerName.toUpperCase(),
+      otherVariable: 'My name is John Cena',
+    }
+  });
+  .moveTemplates('../../fake/destination', ['./reducer.template.js'])
+  .rename('../../fake/destination/reducer.template.js', (answers) => {
+    return `${answers.reducerName}.js`;
+  })
+  .updateFile('../../fake/destination/store.js', (answers) => [
+    useImport(`./${answers.file2}`, answers.file2),
+    usePath(`./${answers.file2}`),
+    useCustom({regex, content}),
+  ])
+  .addQuestion({
+    message: 'Witch styles do you use?',
+    type: 'list',
+    name: 'style',
+    choices: [
+      {name: 'style.template.scss', value: 'Scss'},
+      {name: 'style.template.less', value: 'Less'},
+    ],
+  })
+  .moveTemplates('../../fake/destination', (answers) => [
+    {from: './' + answers.style, to: 'style/' + answers.style}
+  ])
 ```
 
-Обратите внимание что зависимости генераторов не должны влиять на наше приложение.
+## ⚛️ Hooks
 
-Последнее что нужно сделать - это обновить `package.json` в вашем проекте:
+The core feature all around is code injectors to existed files. We call it hooks, to be on hype.
 
-```
-"scripts": {
-  "cli": "node_modules/.bin/yo ./cli/index.js"
+It work like so. Let's imagene you have file called `router.js`. After new `route` generation you wants to append new route here.
+
+So, lets add some hook to the `router.js`,
+
+```js
+import React from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import { HomeRoute } from './home-route';
+/* re-cli:use-import */
+
+function AppRouter() {
+  return (
+    <Router>
+        <Route path="/about/" component={HomeRoute} />
+        {/* re-cli:use-route */}
+      </div>
+    </Router>
+  );
 }
+
+export default AppRouter;
 ```
 
-## Работа с генератором
-
-Из папки приложения запускайте команду
+So step after generation we expect to have like this
 
 ```js
-npm run cli
+import React from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import { HomeRoute } from './home-route';
+import { NewRoute } from './new-route';
+/* re-cli:use-import */
+
+function AppRouter() {
+  return (
+    <Router>
+        <Route path="/about/" component={HomeRoute} />
+        <Route path="/new-route/" component={NewRoute} />
+        {/* re-cli:use-route */}
+      </div>
+    </Router>
+  );
+}
+
+export default AppRouter;
 ```
 
-## Замечания при создании генераторов
+To make it done we have hooks:
 
-У yeoman отсутсвует понятие lifecycle. Вместо этого они используют приватные и публичные методы.
+- useImport -> useImport(`{ NewRoute }`, `./new-route`) -> import { NewRoute } from './new-route';
+- usePath -> usePath(`./new-route`) -> `'./new-route',`
+- useModuleName -> useModuleName(`NodeModule`) -> `NodeModule,`
+- useCustom -> useCustom({ regex, content }) -> content
 
-Пример приватного метода:
+they are applied to file by
 
 ```js
-_я_приватный() {}
+  cliOf('My awesome task')
+    ...
+    .updateFile('path', (answers) => [
+      useImport(`{${answers.camelCaseName}}`, `./${answers.name}.js`),
+      usePath(`./${answers.name}.js`),
+      useCustom({
+        regex: /(\s*)(\/\*.*re-cli:use-module-name.*\*\/)/,
+        content: `$1${moduleName}$1$2,`,
+      }),
+    ])
 ```
 
-Пример публичного:
+## 🚀 Setup
 
 ```js
-я_публичный() {}
+npm install @re/cli
+// or
+yarn add @re/cli
 ```
 
-Так вот yeoman запускает все публичные методы по очереди, сортируя по алфавиту. Так что не удивляйтесь если ваша пустая функция вызывается без параметров и падает с ошибкой.
+it's possible to use it by global setup
 
-[детали](http://yeoman.io/authoring/running-context.html)
+```js
+npm install @re/cli -g
+// or
+yarn add @re/cli -g
+```
 
+## Placing generators right way
+
+The default agreements you should have `generators` folder at project root with you own generators are inside folders.
+
+Other words, you generators should match the path: `generators/**/index*`
+
+To override default behavior is simple (following same markup: https://storybook.js.org/docs/guides/guide-react/)
+
+To do that, create a file at `.re-cli/config.js` with the following content:
+
+```js
+const { configure } = require("@re/cli");
+
+function loadStories() {
+  require("../generators/**/index*");
+  // You can require as many stories as you need.
+}
+
+configure(loadStories, module);
+```
+
+But the full file path will resolved to `node.js` module and will execute it.
+
+Let's say you wan't to have generators like stand alone module, to share it cross over the projects you have. Let's say it have name: `@re/xxx-generators`
+
+The code markup can looks like:
+
+- create a file at `index.js` with the following content:
+
+  ```js
+  const { configure } = require("re-cli");
+
+  function loadStories() {
+    require("./generators/**/*.gen.js");
+  }
+
+  configure(loadStories, module);
+  ```
+
+- make sure you have `package.json` main section like that:
+
+  ```json
+  "main": "index.js",
+  ```
+
+- the @re/cli will try to find the generators in that node module by using the `path` you prodive at `index.js`
+
+## Tech notes
+
+You can't use modern syntax different to Node.js you have installed. Cause we doesn't use `babel`, `webpack` inside.
+
+`@re/cli` is written by using TS. So you will receive the extra IDE help by using TS for generators. But, you have to compile them. It should be simple for stand alone set of generators.
+
+---
+
+[MIT](./LICENSE)
