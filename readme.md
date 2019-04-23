@@ -15,12 +15,14 @@ cliOf('Create reducer', module)
     message: 'Reducer name',
     type: 'input'
   })
+  .setKey('key')
   .ask({
     name: 'model',
     message: 'Reducer data model',
     type: 'input'
   })
   .setAnswers((answers) => {
+    // extend answers object with new data
     return {
       reducerName: answers.reducerName,
       model: answers.model,
@@ -46,10 +48,22 @@ cliOf('Create reducer', module)
       {name: 'style.template.less', value: 'Less'},
     ],
   })
+  .call((answers) => {
+    // do any wiered stuff you need,
+    // use setAnswers other vice to store result
+    return axios.get(`./ping-hook/?${answers.style}`)
+  })
+  .check((answers, goTo) => {
+    if (answers.continue) {
+      goTo('begining')
+    }
+  })
   .move('../../fake/destination', (answers) => [
     {from: './' + answers.style, to: 'style/' + answers.style}
   ])
 ```
+
+**Notes** all callback functions can be async or return promise, to apply pause on the task.
 
 ## ⚛️ Hooks
 

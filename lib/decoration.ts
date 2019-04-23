@@ -38,7 +38,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const move = (destination: string, templatesPaths: TemplatesPaths ) => {
     config.tasks.push(async () => {
       return await Promise.all(
-        (Array.isArray(templatesPaths) ? templatesPaths  : templatesPaths(Object.assign({}, config.answers))).map(async p => {
+        (Array.isArray(templatesPaths) ? templatesPaths  : await templatesPaths(Object.assign({}, config.answers))).map(async p => {
           let pathFrom: string;
           let pathTo: string;
 
@@ -82,7 +82,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     getHooks: (answers: Answers) => Hooks
   ) => {
     config.tasks.push(async () => {
-      const hooks = getHooks(Object.assign({}, config.answers));
+      const hooks = await getHooks(Object.assign({}, config.answers));
       const p = path.join(__currentDirName, filePath);
 
       try {
@@ -101,7 +101,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   ) => {
     config.tasks.push(async () => {
       try {
-        const name = newName(Object.assign({}, config.answers));
+        const name = await newName(Object.assign({}, config.answers));
 
         return anRename(anPath, name);
       } catch (err) {
@@ -117,7 +117,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   ) => {
     config.tasks.push(async () => {
       try {
-        config.answers = change(Object.assign({}, config.answers));
+        config.answers = await change(Object.assign({}, config.answers));
         log([
           `Answers changed to:`,
           `${green(JSON.stringify(config.answers, null, 4))}`
