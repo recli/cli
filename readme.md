@@ -1,26 +1,26 @@
 # ⌘ Re-Cli generator
 
-The core motivation is to reduce file creation rutine form dev process for one side. From other is to increase the code quality by automate new code injection. It allow you have strict code agreements cross over ther project, and decrease the onboarding prorcess.
+The core motivation is to reduce file creation routine form dev process for one side. From other is to increase the code quality by automating new code injection. It allows you to have strict code agreements cross over their project, and decrease the onboarding process.
 
 ## API
 
-Full api for generators are here:
+Full API for generators are here:
 
 ```js
 const { cliOf, useImport, usePath, useCustom } = require("@re/cli");
 
 cliOf('Create reducer', module)
-  .addQuestion({
+  .ask({
     name: 'reducerName',
     message: 'Reducer name',
     type: 'input'
   })
-  .addQuestion({
+  .ask({
     name: 'model',
     message: 'Reducer data model',
     type: 'input'
   })
-  .changeAnswers((answers) => {
+  .setAnswers((answers) => {
     return {
       reducerName: answers.reducerName,
       model: answers.model,
@@ -28,16 +28,16 @@ cliOf('Create reducer', module)
       otherVariable: 'My name is John Cena',
     }
   });
-  .moveTemplates('../../fake/destination', ['./reducer.template.js'])
+  .move('../../fake/destination', ['./reducer.template.js'])
   .rename('../../fake/destination/reducer.template.js', (answers) => {
     return `${answers.reducerName}.js`;
   })
-  .updateFile('../../fake/destination/store.js', (answers) => [
+  .useHooks('../../fake/destination/store.js', (answers) => [
     useImport(`./${answers.file2}`, answers.file2),
     usePath(`./${answers.file2}`),
     useCustom({regex, content}),
   ])
-  .addQuestion({
+  .ask({
     message: 'Witch styles do you use?',
     type: 'list',
     name: 'style',
@@ -46,7 +46,7 @@ cliOf('Create reducer', module)
       {name: 'style.template.less', value: 'Less'},
     ],
   })
-  .moveTemplates('../../fake/destination', (answers) => [
+  .move('../../fake/destination', (answers) => [
     {from: './' + answers.style, to: 'style/' + answers.style}
   ])
 ```
@@ -55,9 +55,9 @@ cliOf('Create reducer', module)
 
 The core feature all around is code injectors to existed files. We call it hooks, to be on hype.
 
-It work like so. Let's imagene you have file called `router.js`. After new `route` generation you wants to append new route here.
+It works like so. Let's imagine you have a file called `router.js`. After new `route` generation you want to append new route here.
 
-So, lets add some hook to the `router.js`,
+So, let's add some hook to the `router.js`,
 
 ```js
 import React from "react";
@@ -115,7 +115,7 @@ they are applied to file by
 ```js
   cliOf('My awesome task')
     ...
-    .updateFile('path', (answers) => [
+    .useHooks('path', (answers) => [
       useImport(`{${answers.camelCaseName}}`, `./${answers.name}.js`),
       usePath(`./${answers.name}.js`),
       useCustom({
@@ -143,9 +143,9 @@ yarn add @re/cli -g
 
 ## Placing generators right way
 
-The default agreements you should have `generators` folder at project root with you own generators are inside folders.
+The default agreements you should have `generators` folder at project root with your own generators are inside folders.
 
-Other words, you generators should match the path: `generators/**/index*`
+Other words, your generators should match the path: `generators/**/index*`
 
 To override default behavior is simple (following same markup: https://storybook.js.org/docs/guides/guide-react/)
 

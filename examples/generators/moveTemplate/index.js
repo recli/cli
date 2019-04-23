@@ -7,7 +7,7 @@ const templatePaths = [
 ];
 
 cliOf('moveTemplate', module)
-  .addQuestion({
+  .ask({
     type: 'list',
     name: 'selectedTemplate',
     message: 'Please select template to move.',
@@ -15,6 +15,6 @@ cliOf('moveTemplate', module)
     default: templatePaths[0],
   })
   // moving selected template with saving hierarchy of folders
-  .moveTemplates(destination, (answers) => [answers.selectedTemplate])
+  .move(destination, (answers) => [answers.selectedTemplate])
   // moving selected template to destination folder with rename
-  .moveTemplates(destination, (answers) => [{from: answers.selectedTemplate, to: 'temp.file'}])
+  .move(destination, (answers) => [{from: answers.selectedTemplate, to: 'temp.file'}])

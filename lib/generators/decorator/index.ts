@@ -1,22 +1,22 @@
 import { cliOf, useImport, usePath } from "../../decoration";
 
 cliOf('decorator', module)
-  .addQuestion({
+  .ask({
     name: 'file',
     message: 'Move file',
     type: 'input'
   })
-  .addQuestion({
+  .ask({
     name: 'file2',
     message: 'Move file2',
     type: 'input'
   })
-  .moveTemplates('../../fake/destination', ['./fake.template.js'])
-  .updateFile('../../fake/destination/index.js', (answers) => [
+  .move('../../fake/destination', ['./fake.template.js'])
+  .useHooks('../../fake/destination/index.js', (answers) => [
     useImport(`./${answers.file2}`, answers.file2),
     usePath(`./${answers.file2}`),
   ])
-  .addQuestion({
+  .ask({
     name: 'file3',
     message: 'Are you enjoy it',
     type: 'confirm'

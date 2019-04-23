@@ -1,7 +1,6 @@
 import { Question, prompt } from "inquirer";
 import path from "path";
 import fs from "fs";
-import { ncp } from "ncp";
 import { Answers, Hooks } from "./models";
 import { template } from "./template";
 import { updateFile as fileUpdate, rename as anRename } from "./file";
@@ -11,6 +10,7 @@ import { log, copyTemplateFolderRecursively } from "./helpers";
 import { green } from "colors";
 
 export { useImport, usePath, useCustom, useModuleName, prompt };
+
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const __currentDirName = module.paths[0].replace("node_modules", "");
 
@@ -20,7 +20,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     answers: {} as Answers,
   };
 
-  const addQuestion = (inquirerQuestion: Question) => {
+  const ask = (inquirerQuestion: Question) => {
     config.tasks.push(async () => {
       const answ = await prompt([inquirerQuestion]);
       // @ts-ignore
@@ -34,15 +34,12 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const run = () => config;
   type TemplatesPaths = Array<string | {from: string, to: string}> | {(answers: Answers): []};
 
-  const moveTemplates = (destination: string, templatesPaths: TemplatesPaths ) => {
+  const move = (destination: string, templatesPaths: TemplatesPaths ) => {
     config.tasks.push(async () => {
       return await Promise.all(
         (Array.isArray(templatesPaths) ? templatesPaths  : templatesPaths(Object.assign({}, config.answers))).map(async p => {
           let pathFrom: string;
           let pathTo: string;
-
-          if (typeof p === 'string') {
-          }
 
           if (typeof p === 'string') {
             const templateFolderPath = path.join(__currentDirName, p);
@@ -72,7 +69,6 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
             catch (err) {
               return formatError(err);
             }
-          // }
         })
       );
     });
@@ -80,7 +76,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     return api;
   };
 
-  const updateFile = (
+  const useHooks = (
     filePath: string,
     getHooks: (answers: Answers) => Hooks
   ) => {
@@ -115,7 +111,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     return api;
   };
 
-  const changeAnswers = (
+  const setAnswers = (
     change: (answers: Answers) => Answers
   ) => {
     config.tasks.push(async () => {
@@ -132,11 +128,11 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   };
 
   const api = {
-    addQuestion,
-    moveTemplates,
-    updateFile,
+    ask,
+    move,
+    useHooks,
     rename,
-    changeAnswers
+    setAnswers
   };
 
   module.exports = {
