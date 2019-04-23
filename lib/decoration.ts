@@ -11,12 +11,15 @@ import { green } from "colors";
 
 export { useImport, usePath, useCustom, useModuleName, prompt };
 
+type TaskType = string | ((setCurrent: (value: number) => number) => any);
+type TemplatesPaths = Array<string | {from: string, to: string}> | {(answers: Answers): []};
+
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   const __currentDirName = module.paths[0].replace("node_modules", "");
 
   const config = {
     name: generatorName,
-    tasks: [] as Array<() => any>,
+    tasks: [] as Array<TaskType>,
     answers: {} as Answers,
   };
 
@@ -32,8 +35,6 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   };
 
   const run = () => config;
-  type TemplatesPaths = Array<string | {from: string, to: string}> | {(answers: Answers): []};
-
   const move = (destination: string, templatesPaths: TemplatesPaths ) => {
     config.tasks.push(async () => {
       return await Promise.all(
@@ -127,12 +128,33 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     return api;
   };
 
+  const setKey = (
+    key: string
+  ) => {
+    config.tasks.push(key);
+
+    return api;
+  };
+
+  const check = (callback: (answers: Answers, goTo: (key: string) => any) => any) => {
+    config.tasks.push(async (setCurrent) => {
+      callback(Object.assign({}, config.answers), (key) => {
+        const index = config.tasks.findIndex(e => e === key);
+        setCurrent(index);
+      });
+    });
+
+    return api;
+  };
+
   const api = {
     ask,
     move,
     useHooks,
     rename,
-    setAnswers
+    setAnswers,
+    setKey,
+    check
   };
 
   module.exports = {

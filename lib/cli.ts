@@ -30,12 +30,26 @@ const init = async () => {
 
   const config = generator.run();
   let current = 0;
+  const setCurrent = (value: number) => current = value;
 
   const move = async () => {
     if (config.tasks.length > current) {
+      // it can be string
+      // it allow us return back or skip some tasks
+      const taskOrKey = config.tasks[current];
+      let task;
+
+      if (typeof taskOrKey === 'string') {
+        current += 1
+        task = config.tasks[current];
+      } else {
+        task = taskOrKey;
+      }
+
       /* Step */
-      await config.tasks[current]();
+      await config.tasks[current](setCurrent);
       current += 1;
+
       /* Next */
       await move();
     } else {
