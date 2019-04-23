@@ -1,6 +1,6 @@
 # ⌘ Re-Cli generator
 
-The core motivation is to reduce file creation routine form dev process for one side. From other is to increase the code quality by automating new code injection. It allows you to have strict code agreements cross over their project, and decrease the onboarding process.
+The core motivation is to reduce file creation routine from dev process for one side. From other is to increase the code quality by automating new code injection. It allows you to have strict code agreements cross over their project, and decrease the onboarding process.
 
 ## API
 
