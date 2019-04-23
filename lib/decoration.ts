@@ -138,10 +138,18 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
 
   const check = (callback: (answers: Answers, goTo: (key: string) => any) => any) => {
     config.tasks.push(async (setCurrent) => {
-      callback(Object.assign({}, config.answers), (key) => {
+      await callback(Object.assign({}, config.answers), (key) => {
         const index = config.tasks.findIndex(e => e === key);
         setCurrent(index);
       });
+    });
+
+    return api;
+  };
+
+  const call = (callback: (answers: Answers) => any) => {
+    config.tasks.push(async () => {
+      await callback(Object.assign({}, config.answers));
     });
 
     return api;
@@ -154,7 +162,8 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     rename,
     setAnswers,
     setKey,
-    check
+    check,
+    call
   };
 
   module.exports = {
