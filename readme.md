@@ -1,6 +1,56 @@
 # ⌘ Re-Cli generator
 
-The core motivation is to reduce file creation routine from dev process for one side. From other is to increase the code quality by automating new code injection. It allows you to have strict code agreements cross over their project, and decrease the onboarding process.
+> Powerful but simple cli boilerplate generator
+
+* **Clear**: Human readable config file do what you mean
+* **Useful**: Can insert code in already existing modules
+* **Flexible**: Can transform reuse and extend answers on the fly
+
+## Table of Contents
+-   [Motivation](#motivation)
+-   [Install](#install)
+-   [Usage](#usage)
+-   [Examples & Demos](#examples--demos)
+-   [API](#api)
+-   [Contribute](#contribute)
+-   [License](#license)
+
+
+## Motivation
+Reduce file creation routine from dev process for one side. From other is to increase the code quality by automating new code injection. It allows you to have strict code agreements cross over their project, and decrease the onboarding process.
+
+## Install
+```sh
+$ npm install --save @re/cli
+```
+or if you use yarn
+```sh
+$ yarn add @re/cli
+```
+
+After install you can start using it
+```javascript
+// using ES6 modules
+import mitt from 'mitt'
+
+// using CommonJS modules
+const { cliOf } = require("@re/cli");
+```
+
+## Usage
+On init ou must pass [module](https://nodejs.org/api/globals.html#globals_module) to second argument.
+
+For work with user inputs used [Inquirer.js](https://github.com/SBoudrias/Inquirer.js/#questions). You can freely use it api [his API](https://github.com/SBoudrias/Inquirer.js/#questions) as is.
+
+
+```javascript
+cliOf('Create something', module) // global node.js module
+  .ask({
+    name: 'variableName',
+    message: 'How we name it?',
+    type: 'input'
+  })
+```
 
 ## API
 
