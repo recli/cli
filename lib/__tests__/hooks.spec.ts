@@ -4,7 +4,7 @@ describe('test hooks', () => {
   test('useImport', async () => {
     const result = hooks.applyHooksToContent(`
       import { useX } from './x';
-      /* re-cli:use-import */
+      /* recli:use-import */
 
       xxxx
     `, [hooks.useImport('./xxx.js', '{ ModuleName }')]);
@@ -12,7 +12,7 @@ describe('test hooks', () => {
     expect(result).toBe(`
       import { useX } from './x';
       import { ModuleName } from './xxx.js';
-      /* re-cli:use-import */
+      /* recli:use-import */
 
       xxxx
     `)
@@ -22,7 +22,7 @@ describe('test hooks', () => {
     const result = hooks.applyHooksToContent(`
       [
         '/my-file.xxx.js'
-        /* re-cli:use-path */
+        /* recli:use-path */
       ]
 
       xxxx
@@ -32,7 +32,7 @@ describe('test hooks', () => {
       [
         '/my-file.xxx.js',
         './xxx.js'
-        /* re-cli:use-path */
+        /* recli:use-path */
       ]
 
       xxxx
@@ -43,7 +43,7 @@ describe('test hooks', () => {
     const result = hooks.applyHooksToContent(`
       [
         FileName
-        /* re-cli:use-module-name */
+        /* recli:use-module-name */
       ]
 
       xxxx
@@ -53,7 +53,7 @@ describe('test hooks', () => {
       [
         FileName,
         AwesomeModule
-        /* re-cli:use-module-name */
+        /* recli:use-module-name */
       ]
 
       xxxx

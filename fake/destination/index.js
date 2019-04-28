@@ -27,7 +27,7 @@ import  from './';
 import  from './';
 import  from './';
 import  from './';
-/* re-cli:use-import */
+/* recli:use-import */
 
 const router = [
   './xxx.jsp',,
@@ -76,9 +76,9 @@ const router = [
   './',
   './',
   './'
-  /* re-cli:use-path */
+  /* recli:use-path */
 ]
 export {
   Module,
-  /* re-cli:use-module-name */
+  /* recli:use-module-name */
 };

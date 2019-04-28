@@ -7,15 +7,15 @@ import inquirer from "inquirer";
 const templatePath = path.join(__dirname + '/filename3.js');
 const defaultFileTemplate = `
 import { template } from '../template';
-/* re-cli:use-import */
+/* recli:use-import */
 
 const router = [
   './xxx.jsp',
-  /* re-cli:use-path */
+  /* recli:use-path */
 ]
 export {
   Module,
-  /* re-cli:use-module-name */
+  /* recli:use-module-name */
 };
 `;
 

@@ -25,7 +25,7 @@ cliOf('updateTemplate', module)
     useModuleName('someModule'),
     // using of custom insertion by using regExp (using String.replace)
     useCustom({
-      regex: /(\s*)(\/\*.*re-cli:use-custom.*\*\/)/,
+      regex: /(\s*)(\/\*.*recli:use-custom.*\*\/)/,
       content: `$1'WhereAmI???'$1$2`,
     }),
   ])

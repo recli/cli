@@ -1,4 +1,4 @@
-# ⌘ Re-Cli generator
+# ⌘ ReCli generator
 
 > Powerful but simple cli boilerplate generator
 
@@ -21,11 +21,11 @@ Reduce file creation routine from dev process for one side. From other is to inc
 
 ## Install
 ```sh
-$ npm install --save @re/cli
+$ npm install --save @recli/cli
 ```
 or if you use yarn
 ```sh
-$ yarn add @re/cli
+$ yarn add @recli/cli
 ```
 
 After install you can start using it
@@ -34,7 +34,7 @@ After install you can start using it
 import mitt from 'mitt'
 
 // using CommonJS modules
-const { cliOf } = require("@re/cli");
+const { cliOf } = require("@recli/cli");
 ```
 
 ## Usage
@@ -57,7 +57,7 @@ cliOf('Create something', module) // global node.js module
 Full API for generators are here:
 
 ```js
-const { cliOf, useImport, usePath, useCustom } = require("@re/cli");
+const { cliOf, useImport, usePath, useCustom } = require("@recli/cli");
 
 cliOf('Create reducer', module)
   .ask({
@@ -128,13 +128,13 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import { HomeRoute } from './home-route';
-/* re-cli:use-import */
+/* recli:use-import */
 
 function AppRouter() {
   return (
     <Router>
         <Route path="/about/" component={HomeRoute} />
-        {/* re-cli:use-route */}
+        {/* recli:use-route */}
       </div>
     </Router>
   );
@@ -151,14 +151,14 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import { HomeRoute } from './home-route';
 import { NewRoute } from './new-route';
-/* re-cli:use-import */
+/* recli:use-import */
 
 function AppRouter() {
   return (
     <Router>
         <Route path="/about/" component={HomeRoute} />
         <Route path="/new-route/" component={NewRoute} />
-        {/* re-cli:use-route */}
+        {/* recli:use-route */}
       </div>
     </Router>
   );
@@ -183,7 +183,7 @@ they are applied to file by
       useImport(`{${answers.camelCaseName}}`, `./${answers.name}.js`),
       usePath(`./${answers.name}.js`),
       useCustom({
-        regex: /(\s*)(\/\*.*re-cli:use-module-name.*\*\/)/,
+        regex: /(\s*)(\/\*.*recli:use-module-name.*\*\/)/,
         content: `$1${moduleName}$1$2,`,
       }),
     ])
@@ -192,17 +192,17 @@ they are applied to file by
 ## 🚀 Setup
 
 ```js
-npm install @re/cli
+npm install @recli/cli
 // or
-yarn add @re/cli
+yarn add @recli/cli
 ```
 
 it's possible to use it by global setup
 
 ```js
-npm install @re/cli -g
+npm install @recli/cli -g
 // or
-yarn add @re/cli -g
+yarn add @recli/cli -g
 ```
 
 ## Placing generators right way
@@ -213,10 +213,10 @@ Other words, your generators should match the path: `generators/**/index*`
 
 To override default behavior is simple (following same markup: https://storybook.js.org/docs/guides/guide-react/)
 
-To do that, create a file at `.re-cli/config.js` with the following content:
+To do that, create a file at `.recli/config.js` with the following content:
 
 ```js
-const { configure } = require("@re/cli");
+const { configure } = require("@recli/cli");
 
 function loadStories() {
   require("../generators/**/index*");
@@ -228,14 +228,14 @@ configure(loadStories, module);
 
 But the full file path will resolved to `node.js` module and will execute it.
 
-Let's say you wan't to have generators like stand alone module, to share it cross over the projects you have. Let's say it have name: `@re/xxx-generators`
+Let's say you wan't to have generators like stand alone module, to share it cross over the projects you have. Let's say it have name: `@recli/xxx-generators`
 
 The code markup can looks like:
 
 - create a file at `index.js` with the following content:
 
   ```js
-  const { configure } = require("re-cli");
+  const { configure } = require("recli");
 
   function loadStories() {
     require("./generators/**/*.gen.js");
@@ -250,13 +250,13 @@ The code markup can looks like:
   "main": "index.js",
   ```
 
-- the @re/cli will try to find the generators in that node module by using the `path` you prodive at `index.js`
+- the @recli/cli will try to find the generators in that node module by using the `path` you prodive at `index.js`
 
 ## Tech notes
 
 You can't use modern syntax different to Node.js you have installed. Cause we doesn't use `babel`, `webpack` inside.
 
-`@re/cli` is written by using TS. So you will receive the extra IDE help by using TS for generators. But, you have to compile them. It should be simple for stand alone set of generators.
+`@recli/cli` is written by using TS. So you will receive the extra IDE help by using TS for generators. But, you have to compile them. It should be simple for stand alone set of generators.
 
 ---
 

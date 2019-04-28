@@ -1,9 +1,9 @@
-/* re-cli:use-import */
+/* recli:use-import */
 import {
-  /* re-cli:use-module-name */
+  /* recli:use-module-name */
 } from 'antd';
 
 const arr = [
-  /* re-cli:use-path */
+  /* recli:use-path */
 ];
-/* re-cli:use-custom */
+/* recli:use-custom */

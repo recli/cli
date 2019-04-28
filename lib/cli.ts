@@ -7,7 +7,7 @@ import { formatError } from "./error";
 
 const init = async () => {
   try {
-    require(require.resolve(path.join(process.cwd(), '.re-cli/config.js')));
+    require(require.resolve(path.join(process.cwd(), '.recli/config.js')));
   } catch(e) {
     formatError(e);
     console.error("Re-configuration doesn't found");

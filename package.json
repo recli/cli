@@ -1,8 +1,8 @@
 {
-  "name": "@re/cli",
+  "name": "@recli/cli",
   "version": "1.0.14",
   "bin": {
-    "re-cli": "dist/cli.js"
+    "recli": "dist/cli.js"
   },
   "description": "Tool to create tasks in node js",
   "files": [
@@ -12,6 +12,7 @@
   "scripts": {
     "crap": "node ./crap.js",
     "test": "jest",
+    "prepublish": "npm run build",
     "link": "npm run build && npm link",
     "test-module": "node ./dist/cli.js",
     "run": "babel-node index.js",
@@ -25,8 +26,8 @@
     "yeoman-generator",
     "cli",
     "recli",
-    "re-cli",
-    "@re/cli",
+    "recli",
+    "@recli/cli",
     "automation",
     "generator",
     "task"
@@ -73,10 +74,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MinskJson/re-cli.git"
+    "url": "git+https://github.com/MinskJson/recli.git"
   },
   "bugs": {
-    "url": "https://github.com/MinskJson/re-cli/issues"
+    "url": "https://github.com/MinskJson/recli/issues"
   },
-  "homepage": "https://github.com/MinskJson/re-cli#readme"
+  "homepage": "https://github.com/MinskJson/recli#readme"
 }
