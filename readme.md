@@ -31,7 +31,7 @@ $ yarn add @recli/cli
 After install you can start using it
 ```javascript
 // using ES6 modules
-import mitt from 'mitt'
+import { cliOf } from '@recli/cli'
 
 // using CommonJS modules
 const { cliOf } = require("@recli/cli");
