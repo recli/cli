@@ -35,7 +35,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
   };
 
   const run = () => config;
-  const move = (destination: string, templatesPaths: TemplatesPaths ) => {
+  const move = (templatesPaths: TemplatesPaths, destination: string) => {
     config.tasks.push(async () => {
       return await Promise.all(
         (Array.isArray(templatesPaths) ? templatesPaths  : await templatesPaths(Object.assign({}, config.answers))).map(async p => {

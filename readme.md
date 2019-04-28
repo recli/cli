@@ -80,7 +80,7 @@ cliOf('Create reducer', module)
       otherVariable: 'My name is John Cena',
     }
   });
-  .move('../../fake/destination', ['./reducer.template.js'])
+  .move(['./reducer.template.js'], '../../fake/destination')
   .rename('../../fake/destination/reducer.template.js', (answers) => {
     return `${answers.reducerName}.js`;
   })
@@ -108,9 +108,9 @@ cliOf('Create reducer', module)
       goTo('begining')
     }
   })
-  .move('../../fake/destination', (answers) => [
+  .move((answers) => [
     {from: './' + answers.style, to: 'style/' + answers.style}
-  ])
+  ], '../../fake/destination')
 ```
 
 **Notes** all callback functions can be async or return promise, to apply pause on the task.

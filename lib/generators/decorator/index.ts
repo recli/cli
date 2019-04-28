@@ -11,7 +11,7 @@ cliOf('decorator', module)
     message: 'Move file2',
     type: 'input'
   })
-  .move('../../fake/destination', ['./fake.template.js'])
+  .move(['./fake.template.js'], '../../fake/destination')
   .useHooks('../../fake/destination/index.js', (answers) => [
     useImport(`./${answers.file2}`, answers.file2),
     usePath(`./${answers.file2}`),

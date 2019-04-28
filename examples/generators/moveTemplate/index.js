@@ -15,6 +15,6 @@ cliOf('moveTemplate', module)
     default: templatePaths[0],
   })
   // moving selected template with saving hierarchy of folders
-  .move(destination, (answers) => [answers.selectedTemplate])
+  .move((answers) => [answers.selectedTemplate], destination)
   // moving selected template to destination folder with rename
-  .move(destination, (answers) => [{from: answers.selectedTemplate, to: 'temp.file'}])
+  .move((answers) => [{from: answers.selectedTemplate, to: 'temp.file'}], destination)

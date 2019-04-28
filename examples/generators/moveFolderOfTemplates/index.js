@@ -7,4 +7,4 @@ cliOf('moveFolderOfOptions', module)
     message: 'Now we will move whole folder of templates. Press "any" to continue.',
   })
   // moving folder with all templates inside
-  .move('../../destinations/folderOfTemplates', ['./folderOfTemplates'])
+  .move(['./folderOfTemplates'], '../../destinations/folderOfTemplates')

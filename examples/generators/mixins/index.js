@@ -18,7 +18,7 @@ cliOf('mixins', module)
     filter: (answers) => 'Ok!'
   })
   // moving folder with all templates inside
-  .move('../../destinations/folderOfTemplates', ['./folderOfTemplates'])
+  .move(['./folderOfTemplates'], '../../destinations/folderOfTemplates')
   .ask({
     type: 'list',
     name: 'selectedTemplate',
@@ -27,9 +27,9 @@ cliOf('mixins', module)
     default: templatePaths[0],
   })
   // moving selected template with saving hierarchy of folders
-  .move(destination, (answers) => [answers.selectedTemplate])
+  .move((answers) => [answers.selectedTemplate], destination)
   // moving selected template to destination folder with rename
-  .move(destination, (answers) => [{from: answers.selectedTemplate, to: 'temp.file'}])
+  .move((answers) => [{from: answers.selectedTemplate, to: 'temp.file'}], destination)
 
   // also we have more, maybe usable, methods for you!
   // now we will change name of the file
