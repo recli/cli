@@ -1,76 +1,175 @@
 import { Question, prompt } from "inquirer";
 import path from "path";
-import { Hooks } from "./models/Hook";
+import fs from "fs";
+import { Answers, Hooks } from "./models";
 import { template } from "./template";
-import { updateFile as fileUpdate } from "./file";
+import { updateFile as fileUpdate, rename as anRename } from "./file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
+import { formatError } from "./error";
+import { log, copyTemplateFolderRecursively } from "./helpers";
+import { green } from "colors";
 
-export {
-  useImport,
-  usePath,
-  useCustom,
-  useModuleName,
-  prompt
-}
+export { useImport, usePath, useCustom, useModuleName, prompt };
 
-export const cliOf = (generatorName: string, module: NodeModule, __dirname: string) => {
+type TaskType = string | ((setCurrent: (value: number) => number) => any);
+type TemplatesPaths = Array<string | {from: string, to: string}> | {(answers: Answers): []};
+
+export const cliOf = (generatorName: string, module: NodeJS.Module) => {
+  const __currentDirName = module.paths[0].replace("node_modules", "");
+
   const config = {
     name: generatorName,
-    tasks: [] as Array<() => any>,
-    answers: {} as Answers
+    tasks: [] as Array<TaskType>,
+    answers: {} as Answers,
   };
 
-  const addQuestion = (inquirerQuestion: Question) => {
+  const ask = (inquirerQuestion: Question) => {
     config.tasks.push(async () => {
       const answ = await prompt([inquirerQuestion]);
+      // @ts-ignore
+      log([`answer is: ${green(answ[inquirerQuestion.name] || inquirerQuestion.type === 'confirm' ? answ[inquirerQuestion.name] : 'empty string')}`])
       Object.assign(config.answers, answ);
     });
 
     return api;
   };
 
-  const run = () => {
-    return config;
-  };
+  const run = () => config;
+  const move = (destination: string, templatesPaths: TemplatesPaths ) => {
+    config.tasks.push(async () => {
+      return await Promise.all(
+        (Array.isArray(templatesPaths) ? templatesPaths  : await templatesPaths(Object.assign({}, config.answers))).map(async p => {
+          let pathFrom: string;
+          let pathTo: string;
 
-  const moveTemplates = (destination: string, templatesPaths: string[]) => {
-    config.tasks.push(
-      async () => {
-        return await Promise.all(
-          templatesPaths.map(p => {
-            const from = path.join(__dirname, p);
-            const to = path.join(__dirname, destination, p);
-            return template({
-              from,
-              to,
-              data: config.answers
-            });
-          })
-        )
-      }
-    );
+          if (typeof p === 'string') {
+            const templateFolderPath = path.join(__currentDirName, p);
+            const destinationFolderPath = path.join(__currentDirName, destination);
+            const isDirectory = fs.lstatSync(templateFolderPath).isDirectory();
+
+            if (isDirectory) {
+              return await copyTemplateFolderRecursively(templateFolderPath, destinationFolderPath);
+            }
+
+            pathFrom = p;
+            pathTo= p;
+          } else {
+            pathFrom = p.from;
+            pathTo = p.to;
+          };
+
+            const from = path.join(__currentDirName, pathFrom);
+            const to = path.join(__currentDirName, destination, pathTo);
+            try {
+              return template({
+                from,
+                to,
+                data: config.answers
+              });
+            }
+            catch (err) {
+              return formatError(err);
+            }
+        })
+      );
+    });
 
     return api;
   };
 
-  const updateFile = (filePath: string, getHooks: (answers: Answers) => Hooks) => {
-    config.tasks.push(() => {
-      const hooks = getHooks(Object.assign({}, config.answers));
-      const p = path.join(__dirname, filePath);
+  const useHooks = (
+    filePath: string,
+    getHooks: (answers: Answers) => Hooks
+  ) => {
+    config.tasks.push(async () => {
+      const hooks = await getHooks(Object.assign({}, config.answers));
+      const p = path.join(__currentDirName, filePath);
 
-      return fileUpdate(p, hooks);
+      try {
+        return fileUpdate(p, hooks);
+      } catch (err) {
+        return formatError(err);
+      }
+    });
+
+    return api;
+  };
+
+  const rename = (
+    anPath: string,
+    newName: (answers: Answers) => string
+  ) => {
+    config.tasks.push(async () => {
+      try {
+        const name = await newName(Object.assign({}, config.answers));
+
+        return anRename(anPath, name);
+      } catch (err) {
+        return formatError(err);
+      }
+    });
+
+    return api;
+  };
+
+  const setAnswers = (
+    change: (answers: Answers) => Answers
+  ) => {
+    config.tasks.push(async () => {
+      try {
+        config.answers = await change(Object.assign({}, config.answers));
+        log([
+          `Answers changed to:`,
+          `${green(JSON.stringify(config.answers, null, 4))}`
+        ])
+      } catch (err) {}
+    });
+
+    return api;
+  };
+
+  const setKey = (
+    key: string
+  ) => {
+    config.tasks.push(key);
+
+    return api;
+  };
+
+  const check = (callback: (answers: Answers, goTo: (key: string) => any) => any) => {
+    config.tasks.push(async (setCurrent) => {
+      await callback(Object.assign({}, config.answers), (key) => {
+        const index = config.tasks.findIndex(e => e === key);
+        setCurrent(index);
+      });
+    });
+
+    return api;
+  };
+
+  const call = (callback: (answers: Answers) => any) => {
+    config.tasks.push(async () => {
+      await callback(Object.assign({}, config.answers));
     });
 
     return api;
   };
 
   const api = {
-    addQuestion,
-    moveTemplates,
-    updateFile,
-  }
+    ask,
+    move,
+    useHooks,
+    rename,
+    setAnswers,
+    setKey,
+    check,
+    call
+  };
 
-  module.exports = run;
+  module.exports = {
+    run,
+    name: config.name
+  };
 
   return api;
 };

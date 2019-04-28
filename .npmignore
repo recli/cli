@@ -1,0 +1,12 @@
+.*.swp
+._*
+.DS_Store
+.git
+.npmrc
+lib
+index.js
+index2.js
+.babelrc
+node_modules
+npm-debug.log
+yarn-error.log

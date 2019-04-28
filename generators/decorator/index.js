@@ -1,4 +1,4 @@
-import { cliOf, useImport, usePath } from "../../decoration";
+import { cliOf, useImport, usePath, useCustom } from "../../dist/index";
 
 cliOf('decorator', module)
   .ask({
@@ -15,9 +15,10 @@ cliOf('decorator', module)
   .useHooks('../../fake/destination/index.js', (answers) => [
     useImport(`./${answers.file2}`, answers.file2),
     usePath(`./${answers.file2}`),
+    useCustom({regex, content}),
   ])
   .ask({
     name: 'file3',
     message: 'Are you enjoy it',
-    type: 'confirm'
+    type: 'confirmation'
   })
