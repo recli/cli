@@ -12,11 +12,17 @@ import { green } from "colors";
 export { useImport, usePath, useCustom, useModuleName, prompt };
 
 type TaskType = string | ((setCurrent: (value: number) => number) => any);
+
+type QuestionWithHelp = Question & {
+  type: 'input' | 'number' | 'confirm' | 'list' | 'rawlist' | 'expand' | 'checkbox' | 'password' | 'editor';
+}
+
 type TemplatesPaths =
   | Array<string | { from: string; to: string }>
   | { (answers: Answers): [] };
+
 type ApiType = {
-  ask: (inquirerQuestion: Question) => ApiType;
+  ask: (inquirerQuestion: QuestionWithHelp) => ApiType;
   move: (templatesPaths: TemplatesPaths, destination: string) => ApiType;
   useHooks: (
     filePath: string,
@@ -40,7 +46,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     answers: {} as Answers
   };
 
-  const ask = (inquirerQuestion: Question): ApiType => {
+  const ask = (inquirerQuestion: QuestionWithHelp): ApiType => {
     config.tasks.push(async () => {
       const answ = await prompt([inquirerQuestion]);
       log([
