@@ -6,6 +6,6 @@ import {
   useModuleName
 } from "./decoration";
 
-import { configure } from "./config";
-
-export { cliOf, configure, useImport, usePath, useCustom, useModuleName };
+export { configure } from "./config";
+export { validation, to } from "./helpers";
+export { cliOf, useImport, usePath, useCustom, useModuleName };

@@ -115,6 +115,49 @@ cliOf('Create reducer', module)
 
 **Notes** all callback functions can be async or return promise, to apply pause on the task.
 
+## Formatters & validators
+
+Case conversion:
+```js
+var { to } = require('@recli/cli')
+
+to.camel('what_the_heck')      // "whatTheHeck"
+to.capital('what the heck')    // "What The Heck"
+to.constant('whatTheHeck')     // "WHAT_THE_HECK"
+to.dot('whatTheHeck')          // "what.the.heck"
+to.inverse('whaT tHe HeCK')    // "WHAt ThE HeCK"
+to.lower('whatTheHeck')        // "what the heck"
+to.pascal('what.the.heck')     // "WhatTheHeck"
+to.sentence('WHAT THE HECK.')  // "What the heck."
+to.slug('whatTheHeck')         // "what-the-heck"
+to.snake('whatTheHeck')        // "what_the_heck"
+to.space('what.the.heck')      // "what the heck"
+to.title('what the heck')      // "What the Heck"
+to.upper('whatTheHeck')        // "WHAT THE HECK"
+```
+
+Validators:
+```js
+var { validation } = require('@recli/cli')
+
+cliOf('validation', module)
+  // adding question
+  .ask({
+    name: 'libraryName',
+    message: 'Please enter the name of module you want to import.',
+    type: 'input',
+    validate: validation.validate([
+      validation.isNoWhitespace,
+      validation.isDashFormat,
+      validation.isFirstLetterUpper,
+      validation.isFirstLetterLower,
+      validation.isFileIsNew('directory/**/components'),
+      validation.isCamelFormat
+    ]),
+    default: 'lodash'
+  })
+```
+
 ## ⚛️ Hooks
 
 The core feature all around is code injectors to existed files. We call it hooks, to be on hype.
