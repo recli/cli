@@ -10,7 +10,7 @@
 -   [Motivation](#motivation)
 -   [Install](#install)
 -   [Usage](#usage)
--   [Examples & Demos](#examples--demos)
+-   [Examples & Demos](./examples/generators)
 -   [API](#api)
 -   [Contribute](#contribute)
 -   [License](#license)
