@@ -1,6 +1,6 @@
 {
   "name": "@recli/cli",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "bin": {
     "recli": "dist/cli.js"
   },
@@ -73,10 +73,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MinskJson/recli.git"
+    "url": "git+https://github.com/recli/cli.git"
   },
   "bugs": {
-    "url": "https://github.com/MinskJson/recli/issues"
+    "url": "https://github.com/recli/cli/issues"
   },
-  "homepage": "https://github.com/MinskJson/recli#readme"
+  "homepage": "https://github.com/recli/cli#readme"
 }

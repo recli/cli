@@ -4,7 +4,7 @@
 
 * **Clear**: Human readable config file do what you mean
 * **Useful**: Can insert code in already existing modules
-* **Flexible**: Can transform reuse and extend answers on the fly
+* **Flexible**: Can transform, reuse and extend answers on the fly
 
 ## Table of Contents
 -   [Motivation](#motivation)
