@@ -28,6 +28,18 @@ or if you use yarn
 $ yarn add @recli/cli
 ```
 
+## Running from command line
+
+You can run ReCli directly from the CLI (if it's globally available in your `PATH`, e.g. by `yarn global add @recli/cli` or `npm install @recli/cli --global`) with a variety of useful options.
+
+Here's how to run ReCli and have `debug` output:
+
+```
+recli --test
+```
+
+## Create generator
+
 After install you can start using it
 ```javascript
 // using ES6 modules
