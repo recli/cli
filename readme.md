@@ -69,7 +69,7 @@ cliOf('Create something', module) // global node.js module
 Full API for generators are here:
 
 ```js
-const { cliOf, useImport, usePath, useCustom } = require("@recli/cli");
+const { cliOf, useImport, usePath, useCustom, file, childProcess } = require("@recli/cli");
 
 cliOf('Create reducer', module)
   .ask({
@@ -123,6 +123,29 @@ cliOf('Create reducer', module)
   .move((answers) => [
     {from: './' + answers.style, to: 'style/' + answers.style}
   ], '../../fake/destination')
+  //---
+  .ask({
+    name: 'nestedGenerator',
+    message: 'Pick one of nesteds...',
+    type: 'list',
+    choices: () => file.getAvailableGenerators('examples/generators/**/index.js'),
+  })
+  .useGenerator((answers) => require(answers.nestedGenerator))
+  //---
+  .ask({
+    name: 'pickTask',
+    message: 'Which task does we run?',
+    type: 'list',
+    choices: () => {
+      return [
+        'npm run build',
+        'tsc --emitDeclarationOnly'
+      ];
+    }
+  })
+  .call(async (answers) => {
+    await childProcess.spawn(answers.pickTask);
+  })
 ```
 
 **Notes** all callback functions can be async or return promise, to apply pause on the task.

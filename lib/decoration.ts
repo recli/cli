@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import { Answers, Hooks } from "./models";
 import { template } from "./template";
-import { updateFile as fileUpdate, rename as anRename } from "./file";
+import { updateFile as fileUpdate, rename as anRename } from "./helpers/file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
 import { log, copyTemplateFolderRecursively } from "./helpers";
@@ -35,6 +35,7 @@ type ApiType = {
     callback: (answers: Answers, goTo: (key: string) => any) => any
   ) => ApiType;
   call: (callback: (answers: Answers) => any) => ApiType;
+  useGenerator: (callback: (answers: Answers) => NodeJS.Module | Promise<NodeJS.Module>) => ApiType;
 };
 
 export const cliOf = (generatorName: string, module: NodeJS.Module) => {
@@ -194,6 +195,15 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     return api;
   };
 
+  const useGenerator = (callback: (answers: Answers) => NodeJS.Module | Promise<NodeJS.Module>): ApiType => {
+    config.tasks.push(async () => {
+      const generator = await callback(Object.assign({}, config.answers));
+      return { generator };
+    });
+
+    return api;
+  };
+
   const api = {
     ask,
     move,
@@ -202,7 +212,8 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     setAnswers,
     setKey,
     check,
-    call
+    call,
+    useGenerator
   };
 
   module.exports = {

@@ -1,6 +1,6 @@
 {
   "name": "@recli/cli",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "bin": {
     "recli": "dist/cli.js"
   },
@@ -19,7 +19,7 @@
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel ./lib --out-dir ./dist --extensions '.ts,.js' --source-maps inline",
-    "run-local": "babel-node index.js --local"
+    "run-local": "babel-node index.js --local --test"
   },
   "preferGlobal": true,
   "keywords": [
@@ -34,19 +34,21 @@
   "author": "eguurt@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@types/inquirer": "^6.0.0",
     "@types/glob": "^7.1.1",
+    "@types/inquirer": "^6.0.0",
     "@types/lodash": "^4.14.123",
     "@types/ncp": "^2.0.1",
+    "@types/ora": "^3.2.0",
     "@types/pluralize": "^0.0.29",
     "colors": "^1.1.2",
+    "cross-env": "^5.2.0",
     "ejs": "^2.6.1",
     "glob": "^7.1.3",
+    "inquirer": "^6.3.1",
     "ncp": "^2.0.0",
+    "ora": "^3.4.0",
     "pluralize": "^4.0.0",
-    "pretty-error": "^2.1.1",
-    "cross-env": "^5.2.0",
-    "inquirer": "^6.3.1"
+    "pretty-error": "^2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",

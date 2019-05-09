@@ -1,14 +1,26 @@
 import fs from "fs";
 import path from "path";
-import glob from "glob";
+import commonGlob from "glob";
 import { yellow } from "colors";
 
-import { applyHooksToContent } from "./hooks";
-import { log } from "./helpers";
-import { Hooks } from "./models/Hook";
+import { applyHooksToContent } from "../hooks";
+import { log } from "../helpers";
+import { Hooks } from "../models/Hook";
 import inquirer, { Answers } from "inquirer";
-import { GENERATORS_PATH } from "./config";
-import { formatError } from "./error";
+import { GENERATORS_PATH } from "../config";
+import { formatError } from "../error";
+
+export const glob = (path: string) => {
+  return new Promise((res, rej) =>
+    commonGlob(path, (err: Error | null, matches: string[]) => {
+      if (err) {
+        rej(err);
+      } else {
+        res(matches);
+      }
+    })
+  );
+};
 
 export const updateFile = async (filePath: string, hooks: Hooks) => {
   try {
@@ -68,10 +80,20 @@ export const writeData = async (filename: string, data: string) => {
   }
 };
 
-export const getAvailableGenerators = async () => {
-  const e:any = await Promise.all(GENERATORS_PATH.map(genPath => {
+export const getAvailableGenerators = async (paths?: string[] | string) => {
+  let externalPathes: null | string[] = null;
+
+  if (paths) {
+    if (typeof paths === 'string') {
+      externalPathes = [paths];
+    } else {
+      externalPathes = paths;
+    }
+  }
+
+  const e:any = await Promise.all((externalPathes || GENERATORS_PATH).map(genPath => {
     return new Promise(res => {
-      glob(genPath, (err, matches) => {
+      commonGlob(genPath, (err, matches) => {
         if (err) {
           formatError(err);
           res([]);
@@ -97,3 +119,4 @@ export const getAvailableGenerators = async () => {
     value: string
   }[];
 };
+

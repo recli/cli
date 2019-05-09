@@ -1,4 +1,4 @@
-import { writeData } from '../file';
+import { writeData } from '../helpers/file';
 import fs from 'fs';
 import path from 'path';
 import inquirer from "inquirer";

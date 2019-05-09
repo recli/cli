@@ -7,5 +7,5 @@ import {
 } from "./decoration";
 
 export { configure } from "./config";
-export { validation, to } from "./helpers";
+export { validation, to, file, childProcess } from "./helpers";
 export { cliOf, useImport, usePath, useCustom, useModuleName };

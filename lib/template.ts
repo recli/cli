@@ -1,7 +1,7 @@
 import ejs from "ejs";
 import fs from "fs";
 import { yellow, green } from "colors";
-import { writeData } from "./file";
+import { writeData } from "./helpers/file";
 import { formatError } from "./error";
 import { log } from "./helpers";
 
