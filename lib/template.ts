@@ -3,7 +3,7 @@ import fs from "fs";
 import { yellow, green } from "colors";
 import { writeData } from "./helpers/file";
 import { formatError } from "./error";
-import { log } from "./helpers";
+import { log, safeStringify } from "./helpers";
 
 const template = async ({
   from,
@@ -19,7 +19,7 @@ const template = async ({
       `making template from: ${yellow(from)}`,
       `                  to: ${yellow(to)}`,
       `with params mentioned below:`,
-      `${green(JSON.stringify(data, null, 4))}`
+      `${green(safeStringify(data))}`
     ])
     const templateString = fs.readFileSync(from, "utf-8");
     const renderedResult = ejs.render(templateString, data);

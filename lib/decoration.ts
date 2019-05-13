@@ -6,7 +6,7 @@ import { template } from "./template";
 import { updateFile as fileUpdate, rename as anRename } from "./helpers/file";
 import { useImport, usePath, useCustom, useModuleName } from "./hooks";
 import { formatError } from "./error";
-import { log, copyTemplateFolderRecursively } from "./helpers";
+import { log, copyTemplateFolderRecursively, safeStringify } from "./helpers";
 import { green } from "colors";
 
 export { useImport, usePath, useCustom, useModuleName, prompt };
@@ -160,7 +160,7 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
         config.answers = await change(Object.assign({}, config.answers));
         log([
           `Answers changed to:`,
-          `${green(JSON.stringify(config.answers, null, 4))}`
+          `${green(safeStringify(config.answers))}`
         ]);
       } catch (err) {}
     });
