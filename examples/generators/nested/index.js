@@ -24,4 +24,11 @@ cliOf('nested', module)
   })
   .call((answers) => {
     console.log(answers);
-  });
+  })
+  .useGenerator(() => require('../checkParentAnswers'))
+  .call((answers) => {
+    console.log(answers);
+    const [validationAnswers, checkParentAnswers] = answers.useGenerator;
+    console.log('validation', validationAnswers)
+    console.log('checkParentAnswers', checkParentAnswers)
+  })

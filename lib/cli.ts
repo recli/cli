@@ -27,11 +27,17 @@ const runGenerator = async (generator: any, isNested?: boolean) => {
         // as the task response
         if (resp && resp.generator) {
           config.answers.useGenerator = config.answers.useGenerator || [];
+          // we have to provide access to parent answers some how
+          const childConf = resp.generator.run();
+
+          childConf.answers.useGeneratorParent = config.answers;
+
           const nestedConfig = await runGenerator(
             resp.generator,
             true
           );
-          config.answers.useGenerator.push(nestedConfig);
+
+          config.answers.useGenerator.push(nestedConfig.answers);
         }
       }
       /* Next */
