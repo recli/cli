@@ -49,17 +49,21 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
 
   const ask = (inquirerQuestion: QuestionWithHelp): ApiType => {
     config.tasks.push(async () => {
-      const answ = await prompt([inquirerQuestion]);
-      log([
-        `answer is: ${green(
-          // @ts-ignore
-          answ[inquirerQuestion.name] || inquirerQuestion.type === "confirm"
+      try {
+        const answ = await prompt([inquirerQuestion]);
+        log([
+          `answer is: ${green(
             // @ts-ignore
-            ? answ[inquirerQuestion.name]
-            : "empty string"
-        )}`
-      ]);
-      Object.assign(config.answers, answ);
+            answ[inquirerQuestion.name] || inquirerQuestion.type === "confirm"
+              // @ts-ignore
+              ? answ[inquirerQuestion.name]
+              : "empty string"
+          )}`
+        ]);
+        Object.assign(config.answers, answ);
+      } catch (err) {
+        return formatError(err);
+      }
     });
 
     return api;
@@ -162,14 +166,20 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
           `Answers changed to:`,
           `${green(safeStringify(config.answers))}`
         ]);
-      } catch (err) {}
+      } catch (err) {
+        return formatError(err);
+      }
     });
 
     return api;
   };
 
   const setKey = (key: string): ApiType => {
-    config.tasks.push(key);
+    try {
+      config.tasks.push(key);
+    } catch (err) {
+      formatError(err);
+    }
 
     return api;
   };
@@ -178,10 +188,14 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
     callback: (answers: Answers, goTo: (key: string) => any) => any
   ): ApiType => {
     config.tasks.push(async setCurrent => {
-      await callback(Object.assign({}, config.answers), key => {
-        const index = config.tasks.findIndex(e => e === key);
-        setCurrent(index);
-      });
+      try {
+        await callback(Object.assign({}, config.answers), key => {
+          const index = config.tasks.findIndex(e => e === key);
+          setCurrent(index);
+        });
+      } catch(err) {
+        return formatError(err);
+      }
     });
 
     return api;
@@ -189,7 +203,11 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
 
   const call = (callback: (answers: Answers) => any): ApiType => {
     config.tasks.push(async () => {
-      await callback(Object.assign({}, config.answers));
+      try {
+        await callback(Object.assign({}, config.answers));
+      } catch(err) {
+        return formatError(err);
+      }
     });
 
     return api;
@@ -197,8 +215,12 @@ export const cliOf = (generatorName: string, module: NodeJS.Module) => {
 
   const useGenerator = (callback: (answers: Answers) => NodeJS.Module | Promise<NodeJS.Module>): ApiType => {
     config.tasks.push(async () => {
-      const generator = await callback(Object.assign({}, config.answers));
-      return { generator };
+      try {
+        const generator = await callback(Object.assign({}, config.answers));
+        return { generator };
+      } catch(err) {
+        return formatError(err);
+      }
     });
 
     return api;
